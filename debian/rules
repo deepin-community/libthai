@@ -1,0 +1,59 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+SHARED_PKG := libthai0
+SHLIB_VER := 0.1.12
+
+%:
+	dh $@
+
+override_dh_auto_build-indep:
+	dh_auto_build -- -C data
+ifeq ($(filter nodoc,$(DEB_BUILD_OPTIONS)),)
+	dh_auto_build -- -C doc
+endif
+
+override_dh_auto_build-arch:
+	dh_auto_build -- -C src
+
+# No test for data, doc
+override_dh_auto_test-indep:
+
+override_dh_auto_test-arch:
+	dh_auto_build -- -C data
+	dh_auto_test -- -C tests
+
+override_dh_auto_install-indep:
+	$(MAKE) -C data install DESTDIR=$(CURDIR)/debian/tmp
+	# Don't install doc here, as we'll do so with dh_installdocs later
+
+override_dh_auto_install-arch:
+	$(MAKE) -C include install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C src     install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install-am DESTDIR=$(CURDIR)/debian/tmp
+
+override_dh_link-indep:
+ifeq ($(filter nodoc,$(DEB_BUILD_OPTIONS)),)
+	dh_link -i
+else
+	dh_link -Nlibthai-doc -i
+endif
+
+override_dh_installdocs-indep:
+	dh_installdocs -plibthai-doc --doc-main-package=libthai0 -Xjquery.js
+	dh_installdocs --remaining-packages -i
+
+override_dh_installchangelogs-arch:
+	dh_installchangelogs -Nlibthai-dev -a ChangeLog
+
+override_dh_installdocs-arch:
+	dh_installdocs -plibthai-dev --link-doc=libthai0
+	dh_installdocs --remaining-packages -a
+
+override_dh_makeshlibs:
+	dh_makeshlibs -a -p$(SHARED_PKG) -V '$(SHARED_PKG) (>= $(SHLIB_VER))'
