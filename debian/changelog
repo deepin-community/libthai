@@ -1,3 +1,17 @@
+libthai (0.1.29-1) unstable; urgency=medium
+
+  * New upstream version 0.1.29
+  * Drop patch cherry-picked from upstream
+    - d/p/0001-configure.ac-remove-duplicate-AC_CONFIG_MACRO_DIR.patch
+  * d/copyright: Update year for upstream
+  * Declare compliance with Debian Policy 4.6.0 (no changes)
+  * Drop obsolete libthai-dev.maintscript.
+    Not needed since upgrades from oldoldstable (stretch).
+  * Add upstream metadata
+  * Trim trailing whitespace.
+
+ -- Theppitak Karoonboonyanan <thep@debian.org>  Tue, 21 Dec 2021 03:24:12 +0700
+
 libthai (0.1.28-4.1) unstable; urgency=high
 
   * Non-maintainer upload.
@@ -802,4 +816,3 @@ libthai (0.1.1-1) unstable; urgency=low
   * Initial Release.
 
  -- Pattara Kiatisevi <ott@linux.thai.net>  Sun,  2 Feb 2003 16:37:08 +0900
-
